@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="css/qgis2web.css">
         <link rel="stylesheet" href="css/fontawesome-all.min.css">
         <link rel="stylesheet" href="css/leaflet-measure.css">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
         <style>
         html, body, #map {
             width: 100%;
@@ -42,9 +42,8 @@
         <script src="data/Elevation2280_4.js"></script>
         <script src="data/Elevation2290_5.js"></script>
         <script src="data/Elevation2300_6.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-		<button id="export"> Export GeoJSON </button>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
         <script>
         var highlightLayer;
         function highlightFeature(e) {
@@ -485,13 +484,45 @@
     map.on('draw:created', (e) => {
       drawnItems.addLayer(e.layer);
     });
+			 ۳. دکمه رو با جاوااسکریپت بساز و به کنترل‌ها اضافه کن
+این کد رو بعد از ایجاد نقشه و اضافه کردن drawControl بذار:
+// ساخت دکمه ذخیره به صورت آیکون
+const exportButton = L.DomUtil.create('a', 'leaflet-draw-toolbar-button leaflet-draw-save');
+exportButton.href = '#';
+exportButton.title = 'Save drawings';
+exportButton.innerHTML = '<i class="fas fa-save"></i>';  // آیکون ذخیره از FontAwesome
 
-    // دکمه خروجی
-    document.getElementById('export').addEventListener('click', () => {
-      const data = drawnItems.toGeoJSON(); // تبدیل به GeoJSON
-      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-      saveAs(blob, 'map-data.geojson'); // ذخیره فایل
-    });
+// قرار دادن دکمه زیر کنترل رسم
+const customContainer = L.DomUtil.create('div', 'leaflet-bar leaflet-draw-toolbar leaflet-draw-toolbar-bottom');
+customContainer.style.marginTop = '1px';  // کمی فاصله بده از دکمه‌های بالا
+customContainer.appendChild(exportButton);
+
+// اضافه کردن به نقشه
+document.querySelector('.leaflet-draw').appendChild(customContainer);
+
+// کنترل کلیک روی دکمه ذخیره
+L.DomEvent.on(exportButton, 'click', function (e) {
+    L.DomEvent.stopPropagation(e);
+    L.DomEvent.preventDefault(e);
+
+    if (drawnItems.getLayers().length === 0) {
+        alert('هیچ ترسیمی برای ذخیره وجود ندارد!');
+        return;
+    }
+
+    const data = drawnItems.toGeoJSON();
+    const dataStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'ترسیمات_نقشه_' + new Date().toISOString().slice(0,10) + '.geojson';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    alert('ذخیره تنظیمات');
+});
         </script>
     </body>
 </html>
