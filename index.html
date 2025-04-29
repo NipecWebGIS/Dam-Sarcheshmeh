@@ -479,6 +479,42 @@
       }
     });
     map.addControl(drawControl);
+const exportButton = L.DomUtil.create('a', 'leaflet-draw-toolbar-button leaflet-draw-save');
+exportButton.href = '#';
+exportButton.title = 'Save drawings';
+exportButton.innerHTML = '<i class="fas fa-save"></i>';  // آیکون ذخیره از FontAwesome
+
+// قرار دادن دکمه زیر کنترل رسم
+const customContainer = L.DomUtil.create('div', 'leaflet-bar leaflet-draw-toolbar leaflet-draw-toolbar-bottom');
+customContainer.style.marginTop = '1px';  // کمی فاصله بده از دکمه‌های بالا
+customContainer.appendChild(exportButton);
+
+// اضافه کردن به نقشه
+document.querySelector('.leaflet-draw').appendChild(customContainer);
+
+// کنترل کلیک روی دکمه ذخیره
+L.DomEvent.on(exportButton, 'click', function (e) {
+    L.DomEvent.stopPropagation(e);
+    L.DomEvent.preventDefault(e);
+
+    if (drawnItems.getLayers().length === 0) {
+        alert('هیچ ترسیمی برای ذخیره وجود ندارد!');
+        return;
+    }
+
+    const data = drawnItems.toGeoJSON();
+    const dataStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'ترسیمات_نقشه_' + new Date().toISOString().slice(0,10) + '.geojson';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    alert('ذخیره تنظیمات');
+});
         </script>
     </body>
 </html>
