@@ -64,7 +64,7 @@
             zoomControl:false, maxZoom:28, minZoom:1
         }).fitBounds([[29.959670791724555,55.64762026672729],[30.171119832092526,56.071024218167494]]);
         var hash = new L.Hash(map);
-        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        map.attributionControl.setPrefix('P. Ebrahimi, A. Sadeghnezhad');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
         // remove popup's row if "visible-with-data"
         function removeEmptyRowsFromPopupContent(content, feature) {
@@ -484,8 +484,6 @@
     map.on('draw:created', (e) => {
       drawnItems.addLayer(e.layer);
     });
-			 ۳. دکمه رو با جاوااسکریپت بساز و به کنترل‌ها اضافه کن
-این کد رو بعد از ایجاد نقشه و اضافه کردن drawControl بذار:
 // ساخت دکمه ذخیره به صورت آیکون
 const exportButton = L.DomUtil.create('a', 'leaflet-draw-toolbar-button leaflet-draw-save');
 exportButton.href = '#';
