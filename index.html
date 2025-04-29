@@ -515,6 +515,10 @@ L.DomEvent.on(exportButton, 'click', function (e) {
 
     alert('ذخیره تنظیمات');
 });
+    // افزودن اشکال به نقشه پس از ترسیم
+    map.on('draw:created', (e) => {
+      drawnItems.addLayer(e.layer);
+    });
         </script>
     </body>
 </html>
